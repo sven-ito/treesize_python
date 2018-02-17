@@ -4,12 +4,16 @@ import sys
 import re
 import time
 
-CSV_HEADER = ['volume','abs_path','drive','directory','filename','extension','is_file','is_dir','is_link','size_in_bytes','creation_time','modify_time']
+CSV_HEADER = ['volume','abs_path','depth','drive','directory','filename','extension','is_file','is_dir','is_link','size_in_bytes','creation_time','modify_time']
 
 def create_csv_line(myFileName):
 
     volume = sys.argv[3]
     abs_path = myFileName
+
+    temp_split = re.split(r"\\",abs_path)
+    depth = str(len(temp_split)-1)
+
     drive = os.path.splitdrive(myFileName)[0]
     directory = os.path.split(myFileName)[0] 
     filename = os.path.basename(myFileName)
@@ -29,7 +33,7 @@ def create_csv_line(myFileName):
     mtime_day =  str(time.gmtime(os.path.getmtime(myFileName)).tm_mday)
     modify_time = "-".join([mtime_year,mtime_month,mtime_day])
     
-    csv_line = [volume,abs_path,drive,directory,filename,extension,is_file,is_dir,is_link,size_in_bytes,creation_time,modify_time]
+    csv_line = [volume,abs_path,depth,drive,directory,filename,extension,is_file,is_dir,is_link,size_in_bytes,creation_time,modify_time]
     csv_line_clean = []
 
     for element in csv_line:
