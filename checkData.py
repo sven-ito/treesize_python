@@ -18,8 +18,16 @@ def create_csv_line(myFileName):
     is_dir = str(os.path.isdir(myFileName))
     is_link = str(os.path.isdir(myFileName))
     size_in_bytes = str(os.path.getsize(myFileName))
-    creation_time = "-".join([str(time.gmtime(os.path.getctime(myFileName)).tm_year), str(time.gmtime(os.path.getctime(myFileName)).tm_mon), str(time.gmtime(os.path.getctime(myFileName)).tm_mday)])
-    modify_time = "-".join([str(time.gmtime(os.path.getmtime(myFileName)).tm_year),str(time.gmtime(os.path.getmtime(myFileName)).tm_mon),str(time.gmtime(os.path.getmtime(myFileName)).tm_mday)])
+    
+    ctime_year = str(time.gmtime(os.path.getctime(myFileName)).tm_year)
+    ctime_month = str(time.gmtime(os.path.getctime(myFileName)).tm_mon)
+    ctime_day = str(time.gmtime(os.path.getctime(myFileName)).tm_mday)
+    creation_time = "-".join([ctime_year,ctime_month,ctime_day])
+
+    mtime_year = str(time.gmtime(os.path.getmtime(myFileName)).tm_year)
+    mtime_month = str(time.gmtime(os.path.getmtime(myFileName)).tm_mon)
+    mtime_day =  str(time.gmtime(os.path.getmtime(myFileName)).tm_mday)
+    modify_time = "-".join([mtime_year,mtime_month,mtime_day])
     
     csv_line = [volume,abs_path,drive,directory,filename,extension,is_file,is_dir,is_link,size_in_bytes,creation_time,modify_time]
     csv_line_clean = []
