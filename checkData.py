@@ -3,12 +3,12 @@ import csv
 import sys
 import re
 import time
+from argparse import ArgumentParser
 
 CSV_HEADER = ['volume','abs_path','depth','drive','directory','filename','extension','is_file','is_dir','is_link','size_in_bytes','creation_time','modify_time']
 
-def create_csv_line(myFileName):
+def create_csv_line(myFileName, volume):
 
-    volume = sys.argv[3]
     abs_path = myFileName
 
     temp_split = re.split(r"\\",abs_path)
@@ -43,21 +43,28 @@ def create_csv_line(myFileName):
 
 def main():
 
-    writer = csv.writer(open(sys.argv[2],"w"), delimiter=';', lineterminator = "\n")
+    parser = ArgumentParser()
+    parser.add_argument("-p", "--path", dest="path", help="Path of the volume/directory to scan", required="True")
+    parser.add_argument("-o", "--output", dest="output", help="Output CSV filename", required="True")
+    parser.add_argument("-v", "--volume", dest="volume", help="Name of the volume", required="True")
+    
+    args = parser.parse_args()
+
+    writer = csv.writer(open(args.output,"w"), delimiter=';', lineterminator = "\n")
     writer.writerow(CSV_HEADER)
     
-    for dirname, dirnames, filenames in os.walk(sys.argv[1]):
+    for dirname, dirnames, filenames in os.walk(args.path):
     # print path to all subdirectories first.
         for subdirname in dirnames:
             myFileName = os.path.join(dirname, subdirname)
-            csv_line = create_csv_line(myFileName)
+            csv_line = create_csv_line(myFileName, args.volume)
             writer.writerow(csv_line)
             print(csv_line)
 
     # print path to all filenames.
         for filename in filenames:
             myFileName = os.path.join(dirname, filename)
-            csv_line = create_csv_line(myFileName)
+            csv_line = create_csv_line(myFileName, args.volume)
             writer.writerow(csv_line)
             print(csv_line)
 
